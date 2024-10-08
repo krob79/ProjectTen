@@ -3,10 +3,16 @@
     "version": "1.0.0",
     "scripts": {
       "install" : "(cd api && npm install); (cd client && npm install);",
-      "start": "(cd api && npm start); (cd client && npm start);"
+      "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+      "start:backend": "(cd api && npm start);",
+      "start:frontend": "(cd client && npm start);"
     },
     "keywords": [],
     "author": "Kyle Roberts",
     "license": "ISC",
-    "description": ""
+    "description": "",
+    "devDependencies": {
+      "concurrently": "^8.2.2",
+      "nodemon": "^3.1.4"
+    }
 }
