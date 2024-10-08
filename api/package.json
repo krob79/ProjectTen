@@ -5,6 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon ./app.js",
+    "startConcurrent": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "npm start",
+    "start:frontend": "(cd ../client && npm start);",
     "seed": "cross-env DB_ENABLE_LOGGING=true node './seed'"
   },
   "keywords": [],
