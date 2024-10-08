@@ -1,0 +1,42 @@
+.input-icon{
+    width:85%;
+    display: inline;
+    margin-right: 5px;
+    border-radius: .5rem;
+}
+
+.input-icon:focus{
+    border-width: 2px;
+}
+
+.container{
+    margin-left: 0px;
+}
+
+.icon{
+    position: absolute;
+    display: inline-block;
+    margin-top: 3px;
+}
+
+.button-icon {
+    /* background: #7c689b; */
+    color: #fff;
+    font-size: 1rem;
+    /* padding: .75rem 1.5rem; */
+    border: 0;
+    margin-top: 3px;
+    /* display: inline-block; */
+    width: 40px;
+    text-align: center;
+    border-radius: .5rem;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.button-icon:hover {
+    cursor: pointer;
+}
+
+.material-item{
+    display:block;
+}
