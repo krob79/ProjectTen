@@ -10,9 +10,5 @@
     "keywords": [],
     "author": "Kyle Roberts",
     "license": "ISC",
-    "description": "",
-    "devDependencies": {
-      "concurrently": "^8.2.2",
-      "nodemon": "^3.1.4"
-    }
+    "description": ""
 }
