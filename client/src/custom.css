@@ -1,8 +1,18 @@
 .input-icon{
     width:85%;
+    height: 50%;
     display: inline;
     margin-right: 5px;
     border-radius: .5rem;
+    margin-bottom: .5rem;
+}
+
+.list-container{
+    margin-left: 0px;
+}
+
+.textareaUpdate{
+    min-height: 500px;
 }
 
 .input-icon:focus{
@@ -32,6 +42,9 @@
     border-radius: .5rem;
     font-weight: bold;
     transition: background 0.2s;
+}
+.button-icon-add{
+    margin-left: 40%;
 }
 .button-icon:hover {
     cursor: pointer;

@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { Link } from 'react-router-dom';
 
 
 const Header = () => {
@@ -9,12 +9,12 @@ const Header = () => {
         <header>
             <div className="wrap header--flex">
                 <h1 className="header--logo">
-                    <a href="index.html">Courses</a>
+                    <Link to={'./courses'} relative="path">Courses</Link>
                 </h1>
                 <nav>
                     <ul className="header--signedout">
-                        <li><a href="sign-up.html">Sign Up</a></li>
-                        <li><a href="sign-in.html">Sign In</a></li>
+                        <li><Link to={'/signup'} relative="path">Sign Up</Link></li>
+                        <li><Link to={'/signin'} relative="path">Sign In</Link></li>
                     </ul>
                 </nav>
             </div>

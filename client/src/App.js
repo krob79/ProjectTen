@@ -2,6 +2,7 @@ import './reset.css';
 import './global.css';
 import './custom.css';
 //import './App.css';
+import { Route, Routes, Navigate } from "react-router-dom";
 import Header from './components/Header';
 import Courses from './components/Courses';
 import CreateCourse from './components/CreateCourse';
@@ -9,39 +10,29 @@ import UpdateCourse from './components/UpdateCourse';
 import CourseDetail from './components/CourseDetail';
 import UserSignUp from './components/UserSignUp';
 import UserSignIn from './components/UserSignIn';
+import NotFound from './components/NotFound';
+import Error from './components/Error'
 
 function App() {
-
-  const userInfo = {
-    firstName: 'React',
-    lastName: 'React',
-    emailAddress: 'react@react.com',
-    password: 'react'
-  }
-
-  const createUser = async () =>{
-    await fetch(`http://localhost:5000/api/users/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(userInfo)
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log("----CREATING USER:");
-      console.log(data);
-    })
-    .catch(error => {
-      console.log("----ERROR FROM createUser!!");
-      console.warn(error);
-    });
-  }
+  
 
   return (
     <div className="App">
       <Header />
-      <UserSignIn />
+      <Routes>
+        <Route path="/" element={<UserSignIn />} />
+        <Route path="/signup" element={<UserSignUp />} />
+        <Route path="/signin" element={<UserSignIn />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/courses/create" element={<CreateCourse />} />
+        <Route path="/courses/:courseId" element={<CourseDetail />} />
+        <Route path="/courses/:courseId/update" element={<UpdateCourse />} />
+        <Route path="/error" element={<Error />} />
+        <Route path="/notfound" element={<NotFound />} />
+        <Route path="*" element={<Navigate to="/notfound" replace />} />
+
+      </Routes>
+      
     </div>
   );
 }

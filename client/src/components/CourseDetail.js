@@ -1,8 +1,10 @@
 import React from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 
-const CourseDetail = ({courseId}) => {
-
+const CourseDetail = (props) => {
+    let {courseId} = useParams();
+    const navigate = useNavigate();
     useEffect( ()=> {
         //run fetch once component is mounted
         getCourse(courseId);
@@ -10,6 +12,7 @@ const CourseDetail = ({courseId}) => {
 
     const [course, setCourse] = useState({});
     const [materials, setMaterials] = useState([]);
+
 
     const getCourse = async (courseId) =>{
         let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
@@ -19,9 +22,17 @@ const CourseDetail = ({courseId}) => {
             'Content-Type': 'application/json'
         }
         })
+        .then(res => {
+            if(res.status == 404){
+                console.log("---NO COURSE FOUND");
+                navigate("/notfound");
+            }else{
+                console.log("---COURSE FOUND");
+            }
+            return res;
+        })
         .then(res => res.json())
         .then(data => {
-        
         console.log("---getCourse - see materials from data object:");
         
 
@@ -32,11 +43,13 @@ const CourseDetail = ({courseId}) => {
         //console.log(data.materialsNeeded);
         console.log(data);
         setCourse(data);
-
+        setMaterials(data.materialsNeeded);
+        
         })
         .catch(error => {
         console.log("----ERROR FROM getCourses!!");
-        console.warn(error);
+        console.log(error);
+        
         });
 
         
@@ -53,9 +66,6 @@ const CourseDetail = ({courseId}) => {
                 result = list.split('\n');
             }else if(list.includes(',')){
                 result = list.split(',');
-            }else{
-                //how many things are we going to check for here...?
-                result = list;
             }
         }else if(Array.isArray(list)){
             console.log("---Creating Materials List, Array detected");
@@ -70,9 +80,9 @@ const CourseDetail = ({courseId}) => {
         <main>
             <div className="actions--bar">
                 <div className="wrap">
-                    <a className="button" href="update-course.html">Update Course</a>
+                    <Link className="button" to={`./update`} relative="path">Update Course</Link>
                     <a className="button" href="#">Delete Course</a>
-                    <a className="button button-secondary" href="index.html">Return to List</a>
+                    <Link className="button button-secondary" to={`/courses`} relative="path">Return to List</Link>
                 </div>
             </div>
             
@@ -100,6 +110,10 @@ const CourseDetail = ({courseId}) => {
                                         if(item){
                                             return(
                                                 <li key={`item${i}`}>{item}</li>
+                                            )
+                                        }else{
+                                            return(
+                                                <li key={`item${i}`}></li>
                                             )
                                         }
                                     })

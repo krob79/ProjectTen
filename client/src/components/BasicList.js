@@ -146,7 +146,7 @@ const BasicList = ({list, onUpdate}) => {
 
     return (
         <>
-        <div className="container">
+        <div className="list-container">
             {
                 elements.map( (item,i) => {
                     {/* console.log("----ADDING ITEM: " + item); */}
@@ -160,7 +160,7 @@ const BasicList = ({list, onUpdate}) => {
                     )
                 })
             }
-            <a className="button-icon" onClick={handleAddElement}>
+            <a className="button-icon button-icon-add" onClick={handleAddElement}>
                     <span className="course--add--title">
                     <IconAdd />
                     </span>

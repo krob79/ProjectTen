@@ -1,8 +1,10 @@
 import React from 'react';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import BasicList from './BasicList';
 
-const UpdateCourse = ({courseId}) => {
+const UpdateCourse = () => {
+    let {courseId} = useParams();
     const [course, setCourse] = useState({});
 
     useEffect( () => {
@@ -63,7 +65,7 @@ const UpdateCourse = ({courseId}) => {
         })
         .catch(error => {
         console.log("----ERROR FROM getCourses!!");
-        console.warn(error);
+        return <Navigate to={"/notfound"} />
         });
 
         
@@ -79,9 +81,6 @@ const UpdateCourse = ({courseId}) => {
                 result = list.split('\n');
             }else if(list.includes(',')){
                 result = list.split(',');
-            }else{
-                //how many things are we going to check for here...?
-                result = list;
             }
         }else if(Array.isArray(list)){
             console.log("---Creating Materials List, Array detected");
@@ -94,13 +93,6 @@ const UpdateCourse = ({courseId}) => {
 
     return(
         <main>
-            <div className="actions--bar">
-                <div className="wrap">
-                    <a className="button" href="update-course.html">Update Course</a>
-                    <a className="button" href="#">Delete Course</a>
-                    <a className="button button-secondary" href="index.html">Return to List</a>
-                </div>
-            </div>
             
             <div className="wrap">
                 <h2>Update Course Detail</h2>
@@ -111,7 +103,7 @@ const UpdateCourse = ({courseId}) => {
                             <h4 className="course--name"><input id="courseTitle" name="title" type="text" onInput={onUpdateHandler} value={course.title || ""} /></h4>
                             <p>By {course.owner}</p>
 
-                            <textarea name="description" onInput={onUpdateHandler} value={course.description || ""}></textarea>
+                            <textarea className="textareaUpdate" name="description" onInput={onUpdateHandler} value={course.description || ""}></textarea>
 
                         </div>
                         <div>
@@ -122,12 +114,13 @@ const UpdateCourse = ({courseId}) => {
                             <BasicList list={course.materialsNeeded} onUpdate={onListUpdate}/>
                         </div>
                     </div>
+                    <div className="updateButtonRow">
+                        <button class="button" type="submit">Update Course</button><Link className="button button-secondary" to={`/courses`} relative="path">Cancel</Link>
+                    </div>
                 </form>
             </div>
         </main>
     )
-
-
 
 }
 

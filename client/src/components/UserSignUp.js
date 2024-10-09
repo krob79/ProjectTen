@@ -1,6 +1,7 @@
 
 import {useState} from 'react';
 import ErrorDisplay from './ErrorDisplay';
+import { Link } from 'react-router-dom';
 // Import axios to post Request
 import axios from "axios";
 
@@ -78,9 +79,9 @@ const UserSignUp = () => {
                     <input id="emailAddress" name="emailAddress" type="email" onInput={onUpdateHandler} value={user.emailAddress} />
                     <label htmlFor="password">Password</label>
                     <input id="password" name="password" type="password" onInput={onUpdateHandler} value={user.password} />
-                    <button className="button" type="submit">Sign Up</button><button className="button button-secondary" onClick={clickHandler}>Cancel</button>
+                    <button className="button" type="submit">Sign Up</button><Link to={`/courses`} className="button button-secondary">Cancel</Link>
                 </form>
-                <p>Already have a user account? Click here to <a href="sign-in.html">sign in</a>!</p>
+                <p>Already have a user account? Click here to <Link to={`/signin`} relative="path">sign in</Link>!</p>
             </div>
 
         </main>
