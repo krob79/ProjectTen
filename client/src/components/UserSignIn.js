@@ -1,5 +1,6 @@
 
 import {useState, useRef, useContext} from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import ErrorDisplay from './ErrorDisplay';
@@ -14,9 +15,9 @@ const UserSignIn = () => {
         password: ""
     }
 
-    //const { actions } = useContext(UserContext);
-    // const navigate = useNavigate();
-    // const location = useLocation();
+    const {actions} = useContext(UserContext);
+    const navigate = useNavigate();
+    const location = useLocation();
     // console.log(location);
 
     // State
@@ -42,41 +43,39 @@ const UserSignIn = () => {
 
         setUser(userCopy);
     }
-    const handleSubmit = async (event) => {
-        console.log("---handleSubmit");
-    }
+    
     const handleCancel = async (event) => {
         console.log("---handleCancel");
     }
 
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
     
-    //     let from = '/authenticated';
-    //     if(location.state){
-    //       from = location.state.from;
-    //     }
+        let from = '/';
+        if(location.state){
+          from = location.state.from;
+        }
     
-    //     const credentials = {
-    //       username: username.current.value,
-    //       password: password.current.value
-    //     };
+        const credentials = {
+          username: username.current.value,
+          password: password.current.value
+        };
     
-    //     try {
-    //       //Get user from UserContext
-    //       const user = await actions.signIn(credentials);
-    //       if(user){
-    //         console.log("---navigate to wherever 'from' is...");
-    //         navigate(from);
-    //       }else{
-    //         setErrors(["Sign-in was unsuccessful"]);
-    //       }
-    //     } catch (error) {
-    //       console.log(error);
-    //       console.log("---navigate to error route");
-    //       navigate("/error");
-    //     }
-    // }
+        try {
+          //Get user from UserContext
+          const user = await actions.signIn(credentials);
+          if(user){
+            console.log("---navigate to wherever 'from' is...");
+            navigate(from);
+          }else{
+            setErrors(["Sign-in was unsuccessful"]);
+          }
+        } catch (error) {
+          setErrors(error);
+          console.log(error);
+          
+        }
+    }
     
     // const handleCancel = (event) => {
     //     event.preventDefault();

@@ -2,6 +2,7 @@
 import {useState} from 'react';
 import ErrorDisplay from './ErrorDisplay';
 import { Link } from 'react-router-dom';
+import { useNavigate, useLocation } from "react-router-dom";
 // Import axios to post Request
 import axios from "axios";
 
@@ -17,6 +18,8 @@ const UserSignUp = () => {
     //const {pending} = useFormStatus();
     const [user, setUser] = useState(userObj);
     const [errors, setErrors] = useState([]);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const clickHandler = () => {
         console.log("CLICK ON BUTTON!");
@@ -36,11 +39,15 @@ const UserSignUp = () => {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
+        
         let fetchUrl = `http://localhost:5000/api/users`;
 
         let formData = JSON.stringify({
             ...user
         });
+
+        console.log("---FORM DATA");
+        console.log(formData);
 
         //reset error list
         setErrors([]);
@@ -61,7 +68,10 @@ const UserSignUp = () => {
             })
             //This cataches the error, but the error is that no response has been returned...which is intended from the REST API
             //So...not sure what if anything needs to be changed here, because the creation of the database entry seems to work!
-            .catch(error => console.log(`----NO RESPONSE DATA ${error}`));
+            .catch(error => {
+                console.log(`----USER SIGN UP - NO RESPONSE DATA`);
+                navigate('/signin');
+            });
     }
 
     return(

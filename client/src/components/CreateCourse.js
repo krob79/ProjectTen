@@ -1,8 +1,10 @@
 import React from 'react';
 import ErrorDisplay from './ErrorDisplay';
-import { Link, Navigate } from 'react-router-dom';
-import {useState} from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {useState, useContext} from 'react';
+import UserContext from "../context/UserContext";
 import BasicList from './BasicList';
+import { createMaterialsString } from "../utils/listHelper";
 
 
 const CreateCourse = () => {
@@ -11,21 +13,25 @@ const CreateCourse = () => {
         description: "",
         estimatedTime: "",
         materialsNeeded: [""],
-        courseOwner: {
-            id: 1,
-            firstName: "Joe",
-            lastName: "Smith",
-            emailAddress: "joe@smith.com"
-        }
+        courseOwner: {}
     }
 
     const [course, setCourse] = useState(courseObj);
     const [errors, setErrors] = useState([]);
+    const { authUser, credentials } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    let courseOwner = {
+        id: authUser.id,
+        firstName: authUser.firstName,
+        lastName: authUser.lastName,
+        emailAddress: authUser.email
+    }
 
     //these next two update handlers essentially do the same thing
     //onUpdateHandler references the name attribute from an input field and updates a course property with the same name with a text value
     const onUpdateHandler = (e) => {
-        console.log(`---onUpdateHandler: ${e.target.value}`);
+        //console.log(`---onUpdateHandler: ${e.target.value}`);
         //name attribute in the input fields must match the course property
         let objKey = e.target.name;
         updateCourseInfo(objKey, e.target.value);
@@ -33,50 +39,71 @@ const CreateCourse = () => {
 
     //onListUpdate updates a specific "materialsNeeded" property with an array
     const onListUpdate = (list) => {
-        console.log("---CreateCourse.js - onListUpdate");
+        //console.log("---CreateCourse.js - onListUpdate");
         //console.log(list);
         updateCourseInfo("materialsNeeded", list);
     }
 
     const updateCourseInfo = (property, value) => {
-        console.log("---UPDATING COURSE INFO");
+        //console.log("---UPDATING COURSE INFO");
         //copy current version of course
         let courseCopy = {
             ...course,
+            courseOwner: {
+                ...courseOwner
+            }
         };
         //update whatever property is referenced
         courseCopy[property] = value;
         //console.log("---NEW COURSE:");
-        console.log(courseCopy);      
+        //console.log(courseCopy);      
         setCourse(courseCopy);
 
     }
 
-    const handleSubmit = async(event) => {
+      const handleSubmit = async(event) => {
         event.preventDefault();
+
         let fetchUrl = `http://localhost:5000/api/courses`;
 
-        let formData = JSON.stringify({
-            ...course
+        let courseOwner = {
+            id: authUser.id,
+            firstName: authUser.firstName,
+            lastName: authUser.lastName,
+            emailAddress: authUser.emailAddress
+        }
+
+        let materialString = createMaterialsString(course.materialsNeeded);
+
+        const postData = JSON.stringify({
+            ...course,
+            materialsNeeded: materialString
         });
 
         //reset error list
         setErrors([]);
 
+        const encodedCredentials = btoa(`${credentials.username}:${credentials.password}`);
+
         await fetch(fetchUrl, {
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${encodedCredentials}`
             },
             method: "POST",
-            body: formData,
+            body: postData,
             })
             .then(res => res.json())
             .then(data => {
+                console.log("-----NEW COURSE CREATED!");
+                console.log(data);
                 //populate the array that contains all of the error messages
                 let message = [];
+                //if it's a string, push it into an array!
                 if (typeof data.message === 'string' || data.message instanceof String){
                     message.push(data.message);
+                //if it's already an array, use it!
                 }else if(Array.isArray(data.message)){
                     message = data.message;
                 }
@@ -85,7 +112,11 @@ const CreateCourse = () => {
             })
             //This cataches the error, but the error is that no response has been returned...which is intended from the REST API
             //So...not sure what if anything needs to be changed here, because the creation of the database entry seems to work!
-            .catch(error => console.log(`----NO RESPONSE DATA ${error}`));
+            .catch(error => {
+                console.log(`----NO RESPONSE DATA ${error}`);
+                navigate(`/courses/`);
+            });
+            
     }
 
     return(
@@ -99,7 +130,7 @@ const CreateCourse = () => {
                         <div>
                             <label htmlFor="courseTitle">Course Title</label>
                             <input onInput={onUpdateHandler} id="courseTitle" name="title" type="text" />
-                            <p>by USER NAME ADDED HERE</p>
+                            <p>by {authUser.firstName} {authUser.lastName}</p>
                             <label htmlFor="courseDescription">Course Description</label>
                             <textarea onInput={onUpdateHandler} id="courseDescription" name="description" />
                         </div>

@@ -6,7 +6,7 @@ import UserContext from '../context/UserContext';
 import { createMaterialsArray, createMaterialsString } from "../utils/listHelper";
 import ErrorDisplay from './ErrorDisplay';
 
-const UpdateCourse = () => {
+const DeleteCourse = () => {
     let {courseId} = useParams();
     const [course, setCourse] = useState({});
     const [errors, setErrors] = useState([]);
@@ -18,35 +18,6 @@ const UpdateCourse = () => {
         //console.log("----UPDATE COURSE - USE EFFECT");
         getCourse(courseId);
     },[]);
-    
-    //these next two update handlers essentially do the same thing
-    //onUpdateHandler references the name attribute from an input field and updates a course property with the same name with a text value
-    const onUpdateHandler = (e) => {
-        console.log(`---onUpdateHandler: ${e.target.value}`);
-        //name attribute in the input fields must match the course property
-        let objKey = e.target.name;
-        updateCourseInfo(objKey, e.target.value);
-    }
-    //onListUpdate updates a specific "materialsNeeded" property with an array
-    const onListUpdate = (list) => {
-        console.log("---UpdateCourse.js - onListUpdate");
-        console.log(list);
-
-        updateCourseInfo("materialsNeeded", list);
-    }
-
-    const updateCourseInfo = (property, value) => {
-        //copy current version of course
-        let courseCopy = {
-            ...course,
-        };
-        //update whatever property is referenced
-        courseCopy[property] = value;
-        //console.log("---NEW COURSE:");
-        //console.log(courseCopy);      
-        setCourse(courseCopy);
-
-    }
 
     const getCourse = async (courseId) =>{
         let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
@@ -108,8 +79,7 @@ const UpdateCourse = () => {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${encodedCredentials}`
             },
-            method: "PUT",
-            body: putData,
+            method: "DELETE"
             })
             .then(res => {
                 console.log("----UPDATED DATA");
@@ -119,7 +89,7 @@ const UpdateCourse = () => {
                     //navigate("/notfound");
                 }else if(res.status == 204){
                     console.log("---COURSE FOUND BUT NO CONTENT RETURNED");
-                    navigate(`/courses/${courseId}`);
+                    navigate(`/courses/`);
                 }
                 return res;
             })
@@ -151,10 +121,10 @@ const UpdateCourse = () => {
     let updateButtons = "";
     let updateMessage = "";
     if(course.userId == authUser.id){
-        updateButtons = <><button className="button" type="submit">Update Course</button><Link className="button button-secondary" to={`/courses/${course.id}`} relative="path">Cancel</Link></>;
+        updateButtons = <><button className="button" type="submit">Delete Course</button><Link className="button button-secondary" to={`/courses/${course.id}`} relative="path">Cancel</Link></>;
     }else{
-        updateButtons = <><p className="notice">Listen here, {authUser.firstName}! This course can only be updated by the course owner, {course.owner}!</p><button disabled className="button button-secondary button-disabled">Update Course</button><Link className="button button-secondary" to={`/courses`} relative="path">Ok, sorry...</Link></>;
-        updateMessage = <p className="notice">You do not have permission to update this course.</p>;
+        updateButtons = <><p className="notice">Listen here, {authUser.firstName}! This course can only be deleted by the course owner, {course.owner}!</p><button disabled className="button button-secondary button-disabled">Delete Course</button><Link className="button button-secondary" to={`/courses`} relative="path">Ok, sorry...</Link></>;
+        updateMessage = <p className="notice">You do not have permission to delete this course.</p>;
     }
 
 
@@ -163,25 +133,18 @@ const UpdateCourse = () => {
         <main>
             
             <div className="wrap">
-                <h2>Update Course Detail</h2>
+                <h2>Delete Course</h2>
                 {updateMessage}
                 {(errors.length > 0) ? <ErrorDisplay errorList={errors}/> : ""}
                 <form onSubmit={handleSubmit}>
                     <div className="main--flex">
                         <div>
-                            <h3 className="course--detail--title">Course</h3>
-                            <h4 className="course--name"><input id="courseTitle" name="title" type="text" onInput={onUpdateHandler} value={course.title || ""} /></h4>
-                            <p>By {course.owner}</p>
-
-                            <textarea className="textareaUpdate" name="description" onInput={onUpdateHandler} value={course.description || ""}></textarea>
+                            <p>Are you sure you want to delete this course?</p>
 
                         </div>
                         <div>
-                            <h3 className="course--detail--title">Estimated Time</h3>
-                            <input id="estimatedTime" name="estimatedTime" onInput={onUpdateHandler} type="text" value={course.estimatedTime || ""}/>
-
-                            <h3 className="course--detail--title">Materials Needed</h3>
-                            <BasicList list={course.materialsNeeded} onUpdate={onListUpdate}/>
+                        
+                            
                         </div>
                     </div>
                     <div className="updateButtonRow">
@@ -194,4 +157,4 @@ const UpdateCourse = () => {
 
 }
 
-export default UpdateCourse;
+export default DeleteCourse;

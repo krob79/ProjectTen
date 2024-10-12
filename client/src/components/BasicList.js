@@ -16,7 +16,7 @@ const BasicList = ({list, onUpdate}) => {
     }
 
     const generateList = (list) => {
-        console.log("---BasicList.js - GENERATING NEW ITEM LIST");
+        //console.log("---BasicList.js - GENERATING NEW ITEM LIST");
         if(list.length < 1){
             console.log("----LIST IS EMPTY!!");
         }
@@ -42,7 +42,7 @@ const BasicList = ({list, onUpdate}) => {
 
         })
         
-        console.log(newList);
+        //console.log(newList);
         return newList;
     }
 
@@ -64,7 +64,7 @@ const BasicList = ({list, onUpdate}) => {
 
     const handleUpdateItem = (itemId, objectOfUpdates) => {
       //console.log(`--FROM LIST.JS handleUpdateItem: editing list item ${itemId}`);
-      console.log(objectOfUpdates);
+      //console.log(objectOfUpdates);
       let objIndex;
 
       let elementsCopy = elements.map((object, i) => {

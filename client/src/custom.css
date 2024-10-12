@@ -7,6 +7,10 @@
     margin-bottom: .5rem;
 }
 
+.headertext {
+    margin-left: 10px;
+}
+
 .list-container{
     margin-left: 0px;
 }
@@ -21,6 +25,17 @@
 
 .container{
     margin-left: 0px;
+}
+
+.button-disabled{
+    background: #d4d3d6;
+    text-decoration: line-through;
+}
+
+.notice{
+    color: red;
+    font-size: 0.75rem;
+    margin-bottom: 5px;
 }
 
 .icon{
