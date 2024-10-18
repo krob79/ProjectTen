@@ -7,7 +7,7 @@ import BasicList from './BasicList';
 import { createMaterialsString } from "../utils/listHelper";
 
 
-const CourseCreate = () => {
+const CourseCreateList = () => {
     const courseObj = {
         title: "",
         description: "",
@@ -73,8 +73,11 @@ const CourseCreate = () => {
             emailAddress: authUser.emailAddress
         }
 
+        let materialString = createMaterialsString(course.materialsNeeded);
+
         const postData = JSON.stringify({
-            ...course
+            ...course,
+            materialsNeeded: materialString
         });
 
         //reset error list
@@ -135,7 +138,7 @@ const CourseCreate = () => {
                             <label htmlFor="estimatedTime">Estimated Time</label>
                             <input onInput={onUpdateHandler} id="estimatedTime" name="estimatedTime" type="text" />
                             <label htmlFor="materialsNeeded">Materials Needed</label>
-                            <textarea id="materialsNeeded" name="materialsNeeded" onInput={onUpdateHandler}></textarea>
+                            <BasicList list={course.materialsNeeded} onUpdate={onListUpdate}/>
                         </div>
                         
                     </div>
@@ -149,4 +152,4 @@ const CourseCreate = () => {
     );
 }
 
-export default CourseCreate;
+export default CourseCreateList;

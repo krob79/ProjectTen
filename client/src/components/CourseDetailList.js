@@ -5,13 +5,13 @@ import UserContext from "../context/UserContext";
 import { createMaterialsArray } from "../utils/listHelper";
 import Markdown from 'react-markdown';
 
-const CourseDetail = (props) => {
+const CourseDetailList = (props) => {
     let {courseId} = useParams();
     const navigate = useNavigate();
     let markdownMaterials = ``;
     
     const [course, setCourse] = useState({});
-    const [materials, setMaterials] = useState(markdownMaterials);
+    const [materials, setMaterials] = useState([]);
     const { authUser } = useContext(UserContext);
     let authUserId = -1;
     if(authUser){
@@ -50,14 +50,14 @@ const CourseDetail = (props) => {
             //adding a new property because it can't seem to read {course.courseOwner.firstName}, etc...
             //But this new property below works!
             data.owner = `${data.courseOwner.firstName} ${data.courseOwner.lastName}`;
-            markdownMaterials = data.materialsNeeded;
-            //data.materialsNeeded = createMaterialsArray(data.materialsNeeded);
+            //markdownMaterials = data.materialsNeeded;
+            data.materialsNeeded = createMaterialsArray(data.materialsNeeded);
             console.log(markdownMaterials);
             //console.log(data);
             setCourse(data);
             
-            //setMaterials(data.materialsNeeded);
-            setMaterials(markdownMaterials);
+            setMaterials(data.materialsNeeded);
+            //setMaterials(markdownMaterials);
 
             console.log("----COURSE OWNER:");
             console.log(course.owner);
@@ -104,9 +104,23 @@ const CourseDetail = (props) => {
 
                             <h3 className="course--detail--title">Materials Needed</h3>
                             <ul className="course--detail--list">
-                                <Markdown>
+                                {/* <Markdown>
                                 {course.materialsNeeded}
-                                </Markdown>
+                                </Markdown> */}
+                                {
+                                    materials.map( (item,i) => {
+                                        //console.log(item);
+                                        if(item){
+                                            return(
+                                                <li key={`item${i}`}>{item}</li>
+                                            )
+                                        }else{
+                                            return(
+                                                <li key={`item${i}`}></li>
+                                            )
+                                        }
+                                    })
+                                }
                             </ul>
                         </div>
                     </div>
@@ -119,4 +133,4 @@ const CourseDetail = (props) => {
 
 }
 
-export default CourseDetail;
+export default CourseDetailList;

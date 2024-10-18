@@ -9,6 +9,7 @@ import CourseCreate from './components/CourseCreate';
 import CourseUpdate from './components/CourseUpdate';
 import CourseDelete from './components/CourseDelete';
 import CourseDetail from './components/CourseDetail';
+import CourseDetailList from './components/CourseDetailList';
 import UserSignUp from './components/UserSignUp';
 import UserSignIn from './components/UserSignIn';
 import UserSignOut from './components/UserSignOut';

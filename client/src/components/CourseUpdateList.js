@@ -71,7 +71,7 @@ const CourseUpdate = () => {
             //But this new property below works!
             data.owner = `${data.courseOwner.firstName} ${data.courseOwner.lastName}`;
             //convert string of materials to array
-            //data.materialsNeeded = createMaterialsArray(data.materialsNeeded);
+            data.materialsNeeded = createMaterialsArray(data.materialsNeeded);
             console.log(data);
             //set the course data
             setCourse(data);
@@ -88,8 +88,11 @@ const CourseUpdate = () => {
 
         let fetchUrl = `http://localhost:5000/api/courses/${courseId}`;
 
+        let materialString = createMaterialsString(course.materialsNeeded);
+
         const putData = JSON.stringify({
-            ...course
+            ...course,
+            materialsNeeded: materialString
         });
 
         //reset error list
@@ -154,8 +157,6 @@ const CourseUpdate = () => {
         updateButtons = <><p className="notice">Listen here, {authUser.firstName}! This course can only be updated by the course owner, {course.owner}!</p><button disabled className="button button-secondary button-disabled">Update Course</button><Link className="button button-secondary" to={`/courses`} relative="path">Ok, sorry...</Link></>;
     }
 
-    console.log("----HERE'S THE MATERIALS ONE MORE TIME!");
-    console.log(course.materialsNeeded);
 
 
     return(
@@ -171,9 +172,7 @@ const CourseUpdate = () => {
                             <h4 className="course--name"><input id="courseTitle" name="title" type="text" onInput={onUpdateHandler} value={course.title || ""} /></h4>
                             <p>By {course.owner}</p>
 
-                            <textarea className="textareaUpdate" name="description" onInput={onUpdateHandler} value={course.description || ""}>
-                                <Markdown>{course.description}</Markdown>
-                            </textarea>
+                            <textarea className="textareaUpdate" name="description" onInput={onUpdateHandler} value={course.description || ""}></textarea>
 
                         </div>
                         <div>
@@ -181,9 +180,7 @@ const CourseUpdate = () => {
                             <input id="estimatedTime" name="estimatedTime" onInput={onUpdateHandler} type="text" value={course.estimatedTime || ""}/>
 
                             <h3 className="course--detail--title">Materials Needed</h3>
-                            <textarea id="materialsNeeded" name="materialsNeeded" onInput={onUpdateHandler} value={course.materialsNeeded || ""}>
-                                <Markdown>{course.materialsNeeded}</Markdown>
-                            </textarea>
+                            <BasicList list={course.materialsNeeded} onUpdate={onListUpdate}/>
                         </div>
                     </div>
                     <div className="updateButtonRow">
