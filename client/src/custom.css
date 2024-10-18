@@ -32,6 +32,11 @@
     text-decoration: line-through;
 }
 
+.course-grid-top{
+    grid-column:1/4;
+    height:30px;
+}
+
 .notice{
     color: red;
     font-size: 0.75rem;

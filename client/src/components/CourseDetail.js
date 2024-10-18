@@ -3,19 +3,28 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import {useEffect, useState, useContext} from 'react';
 import UserContext from "../context/UserContext";
 import { createMaterialsArray } from "../utils/listHelper";
+import Markdown from 'react-markdown';
 
 const CourseDetail = (props) => {
     let {courseId} = useParams();
     const navigate = useNavigate();
+    let markdownMaterials = ``;
+    
+    const [course, setCourse] = useState({});
+    const [materials, setMaterials] = useState(markdownMaterials);
+    const { authUser } = useContext(UserContext);
+    let authUserId = -1;
+    if(authUser){
+        authUserId = authUser.id;
+    }
+
     useEffect( ()=> {
         //run fetch once component is mounted
+        console.log("---USE EFFECT GET COURSE!");
         getCourse(courseId);
     },[]);
     
-
-    const [course, setCourse] = useState({});
-    const [materials, setMaterials] = useState([]);
-    const { authUser } = useContext(UserContext);
+    
 
 
     const getCourse = async (courseId) =>{
@@ -37,37 +46,38 @@ const CourseDetail = (props) => {
         })
         .then(res => res.json())
         .then(data => {
-        console.log("---getCourse - see materials from data object:");
-        
+            //console.log("---getCourse - see materials from data object:");
+            //adding a new property because it can't seem to read {course.courseOwner.firstName}, etc...
+            //But this new property below works!
+            data.owner = `${data.courseOwner.firstName} ${data.courseOwner.lastName}`;
+            markdownMaterials = data.materialsNeeded;
+            //data.materialsNeeded = createMaterialsArray(data.materialsNeeded);
+            console.log(markdownMaterials);
+            //console.log(data);
+            setCourse(data);
+            
+            //setMaterials(data.materialsNeeded);
+            setMaterials(markdownMaterials);
 
-        //adding a new property because it can't seem to read {course.courseOwner.firstName}, etc...
-        //But this new property below works!
-        data.owner = `${data.courseOwner.firstName} ${data.courseOwner.lastName}`;
-        data.materialsNeeded = createMaterialsArray(data.materialsNeeded);
-        //console.log(data.materialsNeeded);
-        console.log(data);
-        setCourse(data);
-        setMaterials(data.materialsNeeded);
-        
+            console.log("----COURSE OWNER:");
+            console.log(course.owner);
         })
         .catch(error => {
-        console.log("----ERROR FROM getCourses!!");
-        console.log(error);
-        
+            console.log("----ERROR FROM getCourses!!");
+            console.log(error);
         });
     }
 
-    let userButtons = "";
-    if(course.userId == authUser.id){
-        userButtons = <><Link className="button" to={`./update`} relative="path">Update Course</Link><Link className="button" to={`./delete`} relative="path">Delete Course</Link></>;
-    }
+    
+
+    
  
 
     return(
         <main>
             <div className="actions--bar">
                 <div className="wrap">
-                    {userButtons}
+                    {(course.userId == authUserId)? <><Link className="button" to={`./update`} relative="path">Update Course</Link><Link className="button" to={`./delete`} relative="path">Delete Course</Link></> : ""}
                     <Link className="button button-secondary" to={`/courses`} relative="path">Return to List</Link>
                 </div>
             </div>
@@ -81,7 +91,11 @@ const CourseDetail = (props) => {
                             <h4 className="course--name">{course.title}</h4>
                             <p>By {course.owner}</p>
 
-                            <p>{course.description}</p>
+                            <p>
+                                <Markdown>
+                                    {course.description}
+                                </Markdown>
+                            </p>
 
                         </div>
                         <div>
@@ -90,7 +104,10 @@ const CourseDetail = (props) => {
 
                             <h3 className="course--detail--title">Materials Needed</h3>
                             <ul className="course--detail--list">
-                                {
+                                <Markdown>
+                                {course.materialsNeeded}
+                                </Markdown>
+                                {/* {
                                     materials.map( (item,i) => {
                                         //console.log(item);
                                         if(item){
@@ -103,8 +120,9 @@ const CourseDetail = (props) => {
                                             )
                                         }
                                     })
-                                }
+                                } */}
                             </ul>
+                            
                         </div>
                     </div>
                 </form>

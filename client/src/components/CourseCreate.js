@@ -7,7 +7,7 @@ import BasicList from './BasicList';
 import { createMaterialsString } from "../utils/listHelper";
 
 
-const CreateCourse = () => {
+const CourseCreate = () => {
     const courseObj = {
         title: "",
         description: "",
@@ -152,4 +152,4 @@ const CreateCourse = () => {
     );
 }
 
-export default CreateCourse;
+export default CourseCreate;

@@ -1,6 +1,7 @@
 import React from 'react';
-import {useEffect, useState} from 'react';
-import { Link } from "react-router-dom";
+import {useEffect, useState, useContext} from 'react';
+import UserContext from "../context/UserContext";
+import { Link, useNavigate } from "react-router-dom";
 
 const Courses = () => {
 
@@ -10,6 +11,12 @@ const Courses = () => {
     },[]);
 
     const [courseList, setCourseList] = useState([]);
+    const { authUser } = useContext(UserContext);
+    const navigate = useNavigate();
+    let authUserId = -1;
+    if(authUser){
+        authUserId = authUser.id;
+    }
 
 
     const getCourses = async () =>{
@@ -28,6 +35,7 @@ const Courses = () => {
         .catch(error => {
         console.log("----ERROR FROM getCourses!!");
         console.warn(error);
+        navigate('/error');
         });
     }
 
@@ -40,7 +48,7 @@ const Courses = () => {
                         return(
                             
                             <Link key={`key${i}`} className="course--module course--link" to={`./${course.id}`} relative="path">
-                                <h2 className="course--label">Course</h2>
+                                <h2 className="course--label">Course {(course.courseOwner.id == authUserId)? "*" : ""}</h2>
                                 <h3 className="course--title">{course.title}</h3>
                             </Link>
                             
@@ -53,6 +61,7 @@ const Courses = () => {
                               New Course
                         </span>
                     </Link>
+                    {authUser?<p className="course-grid-top">* indicates a course you have created</p>:""}
                 </div>
             </main>
         </div>
