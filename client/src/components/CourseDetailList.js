@@ -36,7 +36,7 @@ const CourseDetailList = (props) => {
         }
         })
         .then(res => {
-            if(res.status == 404){
+            if(res.status === 404){
                 console.log("---NO COURSE FOUND");
                 navigate("/notfound");
             }else{
@@ -69,15 +69,11 @@ const CourseDetailList = (props) => {
     }
 
     
-
-    
- 
-
     return(
         <main>
             <div className="actions--bar">
                 <div className="wrap">
-                    {(course.userId == authUserId)? <><Link className="button" to={`./update`} relative="path">Update Course</Link><Link className="button" to={`./delete`} relative="path">Delete Course</Link></> : ""}
+                    {(course.userId === authUserId)? <><Link className="button" to={`./update`} relative="path">Update Course</Link><Link className="button" to={`./delete`} relative="path">Delete Course</Link></> : ""}
                     <Link className="button button-secondary" to={`/courses`} relative="path">Return to List</Link>
                 </div>
             </div>

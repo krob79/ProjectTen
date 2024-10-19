@@ -1,17 +1,14 @@
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import {useEffect, useState, useContext} from 'react';
+import { useEffect, useState, useContext } from 'react';
 import UserContext from "../context/UserContext";
-import { createMaterialsArray } from "../utils/listHelper";
 import Markdown from 'react-markdown';
 
-const CourseDetail = (props) => {
+const CourseDetail = () => {
     let {courseId} = useParams();
     const navigate = useNavigate();
-    let markdownMaterials = ``;
     
     const [course, setCourse] = useState({});
-    const [materials, setMaterials] = useState(markdownMaterials);
     const { authUser } = useContext(UserContext);
     let authUserId = -1;
     if(authUser){
@@ -21,63 +18,49 @@ const CourseDetail = (props) => {
     useEffect( ()=> {
         //run fetch once component is mounted
         console.log("---USE EFFECT GET COURSE!");
+        const getCourse = async (id) =>{
+            let courseUrl = `http://localhost:5000/api/courses/${id}`;
+            console.log(`----FETCHING COURSE ${courseUrl}...`);
+            await fetch(courseUrl, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+            })
+            .then(res => {
+                if(res.status === 404){
+                    console.log("---NO COURSE FOUND");
+                    navigate("/notfound");
+                }else{
+                    console.log("---COURSE FOUND");
+                }
+                return res;
+            })
+            .then(res => res.json())
+            .then(data => {
+                //console.log("---getCourse - see materials from data object:");
+                //adding a new property because it can't seem to read {course.courseOwner.firstName}, etc...
+                //But this new property below works!
+                data.owner = `${data.courseOwner.firstName} ${data.courseOwner.lastName}`;
+    
+                //console.log(data);
+                setCourse(data);
+    
+                console.log("----COURSE OWNER:");
+                console.log(data.owner);
+            })
+            .catch(error => {
+                console.log("----ERROR FROM getCourses!!");
+                console.log(error);
+            });
+        };
         getCourse(courseId);
     },[]);
-    
-    
-
-
-    const getCourse = async (courseId) =>{
-        let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
-        console.log(`----FETCHING COURSE ${courseUrl}...`);
-        await fetch(courseUrl, {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-        })
-        .then(res => {
-            if(res.status == 404){
-                console.log("---NO COURSE FOUND");
-                navigate("/notfound");
-            }else{
-                console.log("---COURSE FOUND");
-            }
-            return res;
-        })
-        .then(res => res.json())
-        .then(data => {
-            //console.log("---getCourse - see materials from data object:");
-            //adding a new property because it can't seem to read {course.courseOwner.firstName}, etc...
-            //But this new property below works!
-            data.owner = `${data.courseOwner.firstName} ${data.courseOwner.lastName}`;
-            markdownMaterials = data.materialsNeeded;
-            //data.materialsNeeded = createMaterialsArray(data.materialsNeeded);
-            console.log(markdownMaterials);
-            //console.log(data);
-            setCourse(data);
-            
-            //setMaterials(data.materialsNeeded);
-            setMaterials(markdownMaterials);
-
-            console.log("----COURSE OWNER:");
-            console.log(course.owner);
-        })
-        .catch(error => {
-            console.log("----ERROR FROM getCourses!!");
-            console.log(error);
-        });
-    }
-
-    
-
-    
- 
 
     return(
         <main>
             <div className="actions--bar">
                 <div className="wrap">
-                    {(course.userId == authUserId)? <><Link className="button" to={`./update`} relative="path">Update Course</Link><Link className="button" to={`./delete`} relative="path">Delete Course</Link></> : ""}
+                    {(course.userId === authUserId)? <><Link className="button" to={`./update`} relative="path">Update Course</Link><Link className="button" to={`./delete`} relative="path">Delete Course</Link></> : ""}
                     <Link className="button button-secondary" to={`/courses`} relative="path">Return to List</Link>
                 </div>
             </div>

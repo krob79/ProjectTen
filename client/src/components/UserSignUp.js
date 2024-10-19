@@ -1,10 +1,8 @@
 
-import {useState} from 'react';
+import {useState, useContext} from 'react';
 import ErrorDisplay from './ErrorDisplay';
-import { Link } from 'react-router-dom';
-import { useNavigate, useLocation } from "react-router-dom";
-// Import axios to post Request
-import axios from "axios";
+import { Link, useNavigate } from 'react-router-dom';
+import UserContext from "../context/UserContext";
 
 const UserSignUp = () => {
 
@@ -14,16 +12,11 @@ const UserSignUp = () => {
         emailAddress: "",
         password: ""
     }
-    
-    //const {pending} = useFormStatus();
+
+    const {actions} = useContext(UserContext);
     const [user, setUser] = useState(userObj);
     const [errors, setErrors] = useState([]);
-    const location = useLocation();
     const navigate = useNavigate();
-
-    const clickHandler = () => {
-        console.log("CLICK ON BUTTON!");
-    }
 
     const onUpdateHandler = (e) => {
         let objKey = e.target.name;
@@ -39,7 +32,7 @@ const UserSignUp = () => {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        
+
         let fetchUrl = `http://localhost:5000/api/users`;
 
         let formData = JSON.stringify({
@@ -47,7 +40,7 @@ const UserSignUp = () => {
         });
 
         console.log("---FORM DATA");
-        console.log(formData);
+        //console.log(formData);
 
         //reset error list
         setErrors([]);
@@ -64,14 +57,35 @@ const UserSignUp = () => {
             .then(data => {
                 //populate the array that contains all of the error messages
                 setErrors(data.message);
-                console.log(data)
             })
             //This cataches the error, but the error is that no response has been returned...which is intended from the REST API
             //So...not sure what if anything needs to be changed here, because the creation of the database entry seems to work!
             .catch(error => {
                 console.log(`----USER SIGN UP - NO RESPONSE DATA`);
-                navigate('/signin');
+                signInNewUser(user);
+                
             });
+    }
+
+    const signInNewUser = async(user) => {
+        const credentials = {
+            username: user.emailAddress,
+            password: user.password
+        };
+    
+        try {
+            //Get user from UserContext
+            const newUser = await actions.signIn(credentials);
+            if(newUser){
+                navigate('/');
+            }else{
+                setErrors(["Sign-in was unsuccessful"]);
+            }
+        } catch (error) {
+            setErrors(error);
+            console.log(error);
+        }
+
     }
 
     return(

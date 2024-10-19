@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-
+import React from "react";
 import BasicListElement from "./BasicListElement";
 import IconAdd from "./IconAdd";
 import IconRemove from "./IconRemove";
@@ -65,12 +64,10 @@ const BasicList = ({list, onUpdate}) => {
     const handleUpdateItem = (itemId, objectOfUpdates) => {
       //console.log(`--FROM LIST.JS handleUpdateItem: editing list item ${itemId}`);
       //console.log(objectOfUpdates);
-      let objIndex;
 
       let elementsCopy = elements.map((object, i) => {
         if(object.id === itemId ){
           //console.log("FOUND at " + i);
-          objIndex = i;
           return(
             {
               ...object, //gets all values in the object
@@ -151,10 +148,7 @@ const BasicList = ({list, onUpdate}) => {
                 elements.map( (item,i) => {
                     {/* console.log("----ADDING ITEM: " + item); */}
                     return (
-                        <div key={`div${i}`} className="material-item" onKeyDown={(e) => { 
-                            if(e.key === 'Enter'){
-                                handleAddElement();
-                            }}}>
+                        <div key={`div${i}`} className="material-item" onKeyDown={(e) => {if(e.key === 'Enter'){handleAddElement();}}}>
                             <BasicListElement key={`element${i}`} id={item.id} value={item.value} onChange={handleUpdateItem} /><a key={`link${i}`} className="button-icon" onClick={() => {handleRemoveItem(item.id)}}><IconRemove /></a>
                         </div>
                     )

@@ -3,8 +3,6 @@ import ErrorDisplay from './ErrorDisplay';
 import { Link, useNavigate } from 'react-router-dom';
 import {useState, useContext} from 'react';
 import UserContext from "../context/UserContext";
-import BasicList from './BasicList';
-import { createMaterialsString } from "../utils/listHelper";
 
 
 const CourseCreate = () => {
@@ -21,14 +19,6 @@ const CourseCreate = () => {
     const { authUser, credentials } = useContext(UserContext);
     const navigate = useNavigate();
 
-    let courseOwner = {
-        id: authUser.id,
-        firstName: authUser.firstName,
-        lastName: authUser.lastName,
-        emailAddress: authUser.email
-    }
-
-    //these next two update handlers essentially do the same thing
     //onUpdateHandler references the name attribute from an input field and updates a course property with the same name with a text value
     const onUpdateHandler = (e) => {
         //console.log(`---onUpdateHandler: ${e.target.value}`);
@@ -37,20 +27,16 @@ const CourseCreate = () => {
         updateCourseInfo(objKey, e.target.value);
     }
 
-    //onListUpdate updates a specific "materialsNeeded" property with an array
-    const onListUpdate = (list) => {
-        //console.log("---CreateCourse.js - onListUpdate");
-        //console.log(list);
-        updateCourseInfo("materialsNeeded", list);
-    }
-
     const updateCourseInfo = (property, value) => {
         //console.log("---UPDATING COURSE INFO");
         //copy current version of course
         let courseCopy = {
             ...course,
             courseOwner: {
-                ...courseOwner
+                id: authUser.id,
+                firstName: authUser.firstName,
+                lastName: authUser.lastName,
+                emailAddress: authUser.emailAddress
             }
         };
         //update whatever property is referenced
@@ -65,13 +51,6 @@ const CourseCreate = () => {
         event.preventDefault();
 
         let fetchUrl = `http://localhost:5000/api/courses`;
-
-        let courseOwner = {
-            id: authUser.id,
-            firstName: authUser.firstName,
-            lastName: authUser.lastName,
-            emailAddress: authUser.emailAddress
-        }
 
         const postData = JSON.stringify({
             ...course

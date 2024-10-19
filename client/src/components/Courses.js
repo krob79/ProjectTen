@@ -48,7 +48,7 @@ const Courses = () => {
                         return(
                             
                             <Link key={`key${i}`} className="course--module course--link" to={`./${course.id}`} relative="path">
-                                <h2 className="course--label">Course {(course.courseOwner.id == authUserId)? "*" : ""}</h2>
+                                <h2 className="course--label">Course {(course.courseOwner.id === authUserId)? "*" : ""}</h2>
                                 <h3 className="course--title">{course.title}</h3>
                             </Link>
                             

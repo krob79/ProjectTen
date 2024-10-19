@@ -1,9 +1,7 @@
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {useEffect, useState, useContext} from 'react';
-import BasicList from './BasicList';
 import UserContext from '../context/UserContext';
-import { createMaterialsArray, createMaterialsString } from "../utils/listHelper";
 import ErrorDisplay from './ErrorDisplay';
 import Markdown from 'react-markdown';
 
@@ -19,20 +17,13 @@ const CourseUpdate = () => {
         getCourse(courseId);
     },[]);
     
-    //these next two update handlers essentially do the same thing
+
     //onUpdateHandler references the name attribute from an input field and updates a course property with the same name with a text value
     const onUpdateHandler = (e) => {
         console.log(`---onUpdateHandler: ${e.target.value}`);
         //name attribute in the input fields must match the course property
         let objKey = e.target.name;
         updateCourseInfo(objKey, e.target.value);
-    }
-    //onListUpdate updates a specific "materialsNeeded" property with an array
-    const onListUpdate = (list) => {
-        console.log("---CourseUpdate.js - onListUpdate");
-        console.log(list);
-
-        updateCourseInfo("materialsNeeded", list);
     }
 
     const updateCourseInfo = (property, value) => {
@@ -61,7 +52,7 @@ const CourseUpdate = () => {
                 console.log("----THIS COURSE ID IS NOT FOUND ");
                 navigate("/notfound");
             //otherwise, kick user to "forbidden" if this course's userId doesn't match the user's id
-            }else if(data.userId != authUser.id){
+            }else if(data.userId !== authUser.id){
                 console.log("----THESE DON'T MATCH: ");
                 navigate("/forbidden");
             }
@@ -113,10 +104,10 @@ const CourseUpdate = () => {
                 console.log("----UPDATED DATA");
                 console.log(res);
 
-                if(res.status == 404){
+                if(res.status === 404){
                     console.log("---NO COURSE FOUND");
                     //navigate("/notfound");
-                }else if(res.status == 204){
+                }else if(res.status === 204){
                     console.log("---COURSE FOUND BUT NO CONTENT RETURNED");
                     navigate(`/courses/${courseId}`);
                 }
@@ -148,7 +139,7 @@ const CourseUpdate = () => {
     }
 
     let updateButtons = "";
-    if(course.userId == authUser.id){
+    if(course.userId === authUser.id){
         updateButtons = <><button className="button" type="submit">Update Course</button><Link className="button button-secondary" to={`/courses/${course.id}`} relative="path">Cancel</Link></>;
     }else{
         updateButtons = <><p className="notice">Listen here, {authUser.firstName}! This course can only be updated by the course owner, {course.owner}!</p><button disabled className="button button-secondary button-disabled">Update Course</button><Link className="button button-secondary" to={`/courses`} relative="path">Ok, sorry...</Link></>;

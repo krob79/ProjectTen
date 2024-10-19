@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import {useEffect, useState, useContext} from 'react';
-import UserContext from '../context/UserContext';
+import { useEffect, useState, useContext } from 'react';
 import { createMaterialsArray, createMaterialsString } from "../utils/listHelper";
+import UserContext from '../context/UserContext';
 import ErrorDisplay from './ErrorDisplay';
 
 const DeleteCourse = () => {
@@ -33,7 +33,7 @@ const DeleteCourse = () => {
                 console.log("----THIS COURSE ID IS NOT FOUND ");
                 navigate("/notfound");
             //otherwise, kick user to "forbidden" if this course's userId doesn't match the user's id
-            }else if(data.userId != authUser.id){
+            }else if(data.userId !== authUser.id){
                 console.log("----THESE DON'T MATCH: ");
                 navigate("/forbidden");
             }
@@ -85,10 +85,10 @@ const DeleteCourse = () => {
             .then(res => {
                 console.log("----UPDATED DATA");
                 console.log(res);
-                if(res.status == 404){
+                if(res.status === 404){
                     console.log("---NO COURSE FOUND");
                     //navigate("/notfound");
-                }else if(res.status == 204){
+                }else if(res.status === 204){
                     console.log("---COURSE FOUND BUT NO CONTENT RETURNED");
                     navigate(`/courses/`);
                 }
@@ -137,7 +137,7 @@ const DeleteCourse = () => {
                         </div>
                     </div>
                     <div className="updateButtonRow">
-                        {(course.userId == authUser.id)?<><button className="button" type="submit">Delete Course</button><Link className="button button-secondary" to={`/courses/${course.id}`} relative="path">Cancel</Link></>:""}
+                        {(course.userId === authUser.id)?<><button className="button" type="submit">Delete Course</button><Link className="button button-secondary" to={`/courses/${course.id}`} relative="path">Cancel</Link></>:""}
                     </div>
                 </form>
             </div>
