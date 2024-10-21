@@ -6,55 +6,61 @@ import Markdown from 'react-markdown';
 
 const CourseDetail = () => {
     let {courseId} = useParams();
+    //use to direct user to 404 display if id is invalid
     const navigate = useNavigate();
-    
+    //use to access all course details
     const [course, setCourse] = useState({});
     const { authUser } = useContext(UserContext);
+    //I'm setting a new variable here for authUser - there was an issue reading in the id when determining if the buttons should display
+    //May need to go back and fully understand the problem there
     let authUserId = -1;
     if(authUser){
         authUserId = authUser.id;
     }
 
-    useEffect( ()=> {
+    useEffect( () => {
         //run fetch once component is mounted
         console.log("---USE EFFECT GET COURSE!");
-        const getCourse = async (id) =>{
-            let courseUrl = `http://localhost:5000/api/courses/${id}`;
-            console.log(`----FETCHING COURSE ${courseUrl}...`);
-            await fetch(courseUrl, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-            })
-            .then(res => {
-                if(res.status === 404){
-                    console.log("---NO COURSE FOUND");
-                    navigate("/notfound");
-                }else{
-                    console.log("---COURSE FOUND");
-                }
-                return res;
-            })
-            .then(res => res.json())
-            .then(data => {
-                //console.log("---getCourse - see materials from data object:");
-                //adding a new property because it can't seem to read {course.courseOwner.firstName}, etc...
-                //But this new property below works!
-                data.owner = `${data.courseOwner.firstName} ${data.courseOwner.lastName}`;
-    
-                //console.log(data);
-                setCourse(data);
-    
-                console.log("----COURSE OWNER:");
-                console.log(data.owner);
-            })
-            .catch(error => {
-                console.log("----ERROR FROM getCourses!!");
-                console.log(error);
-            });
-        };
-        getCourse(courseId);
+        getCourse();
     },[]);
+    
+    
+
+    //makes the call to the api to retrieve data of a single course, given the id
+    const getCourse = async () =>{
+        let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
+        console.log(`----FETCHING COURSE ${courseUrl}...`);
+        await fetch(courseUrl, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        })
+        .then(res => {
+            //bounce the user to /notfound page if course id is invalid
+            if(res.status === 404){
+                console.log("---NO COURSE FOUND");
+                navigate("/notfound");
+            }else{
+                console.log("---COURSE FOUND");
+            }
+            return res;
+        })
+        .then(res => res.json())
+        .then(data => {
+            //adding a new property because it can't seem to read {course.courseOwner.firstName}, etc...
+            //But this new property below works!
+            data.owner = `${data.courseOwner.firstName} ${data.courseOwner.lastName}`;
+
+            //console.log(data);
+            setCourse(data);
+
+        })
+        .catch(error => {
+            console.log("----ERROR FROM getCourses!!");
+            console.log(error);
+        });
+    }
+
 
     return(
         <main>
@@ -73,13 +79,9 @@ const CourseDetail = () => {
                             <h3 className="course--detail--title">Course Title</h3>
                             <h4 className="course--name">{course.title}</h4>
                             <p>By {course.owner}</p>
-
-                            <p>
                                 <Markdown>
                                     {course.description}
                                 </Markdown>
-                            </p>
-
                         </div>
                         <div>
                             <h3 className="course--detail--title">Estimated Time</h3>

@@ -14,7 +14,7 @@ const CourseUpdate = () => {
 
     useEffect( () => {
         //run fetch once component is mounted
-        getCourse(courseId);
+        getCourse();
     },[]);
     
 
@@ -26,6 +26,7 @@ const CourseUpdate = () => {
         updateCourseInfo(objKey, e.target.value);
     }
 
+    //updates one property of the course
     const updateCourseInfo = (property, value) => {
         //copy current version of course
         let courseCopy = {
@@ -37,7 +38,7 @@ const CourseUpdate = () => {
 
     }
 
-    const getCourse = async (courseId) =>{
+    const getCourse = async () =>{
         let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
         //console.log(`----UPDATE COURSE FETCHING COURSE ${courseUrl}...`);
         await fetch(courseUrl, {
@@ -57,19 +58,16 @@ const CourseUpdate = () => {
                 navigate("/forbidden");
             }
             
-            console.log("---getCourse - see materials from data object:");
             //adding a new property because it can't seem to read {course.courseOwner.firstName}, etc...
             //But this new property below works!
             data.owner = `${data.courseOwner.firstName} ${data.courseOwner.lastName}`;
-            //convert string of materials to array
-            //data.materialsNeeded = createMaterialsArray(data.materialsNeeded);
-            console.log(data);
             //set the course data
             setCourse(data);
             
         })
         .catch(error => {
             console.log("----ERROR FROM getCourses!!");
+            //kick user to "error" if other error pops up
             navigate("/error");
         });
     }
@@ -86,11 +84,8 @@ const CourseUpdate = () => {
         //reset error list
         setErrors([]);
 
+        //prepares credentials for API call
         const encodedCredentials = btoa(`${credentials.username}:${credentials.password}`);
-
-        console.log("----SENDING DATA");
-        console.log(credentials);
-        console.log(putData);
 
         await fetch(fetchUrl, {
             headers: {
@@ -104,19 +99,16 @@ const CourseUpdate = () => {
                 console.log("----UPDATED DATA");
                 console.log(res);
 
-                if(res.status === 404){
-                    console.log("---NO COURSE FOUND");
-                    //navigate("/notfound");
-                }else if(res.status === 204){
+                if(res.status === 204){
                     console.log("---COURSE FOUND BUT NO CONTENT RETURNED");
                     navigate(`/courses/${courseId}`);
+                }else if(res.status === 404){
+                    console.log("---NO COURSE FOUND");
                 }
                 return res;
             })
             .then(res => res.json())
             .then(data => {
-                console.log("----UPDATED DATA");
-                console.log(data);
                 //populate the array that contains all of the error messages
                 let message = [];
                 //if it's a string, push it into an array!
@@ -133,11 +125,13 @@ const CourseUpdate = () => {
             //So...not sure what if anything needs to be changed here, because the creation of the database entry seems to work!
             .catch(error => {
                 console.log(`----NO RESPONSE DATA ${error}`);
-                //navigate(`/courses/`);
+                
             });
             
     }
 
+    //this snippet of code was to change the button display just in case a logged in user found their way into this route, but it isn't their course
+    //however, I think I now have other safeguards in place that will redirect them before they get here. For now, I'm leaving this code, just in case.
     let updateButtons = "";
     if(course.userId === authUser.id){
         updateButtons = <><button className="button" type="submit">Update Course</button><Link className="button button-secondary" to={`/courses/${course.id}`} relative="path">Cancel</Link></>;

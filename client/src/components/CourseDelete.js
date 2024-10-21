@@ -1,24 +1,25 @@
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
-import { createMaterialsArray, createMaterialsString } from "../utils/listHelper";
 import UserContext from '../context/UserContext';
 import ErrorDisplay from './ErrorDisplay';
 
 const DeleteCourse = () => {
-    let {courseId} = useParams();
+    //need the course data to verify that the course owner is the same as the current user before deleting
     const [course, setCourse] = useState({});
     const [errors, setErrors] = useState([]);
+    let {courseId} = useParams();
+    //Need information about current authUser to add to the newly created course, plus credentials to authorize the creation of a new course
     const { authUser, credentials } = useContext(UserContext);
+    //use to direct user to appropriate display
     const navigate = useNavigate();
 
     useEffect( () => {
         //run fetch once component is mounted
-        //console.log("----UPDATE COURSE - USE EFFECT");
-        getCourse(courseId);
+        getCourse();
     },[]);
 
-    const getCourse = async (courseId) =>{
+    const getCourse = async () =>{
         let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
         //console.log(`----UPDATE COURSE FETCHING COURSE ${courseUrl}...`);
         await fetch(courseUrl, {
@@ -30,20 +31,16 @@ const DeleteCourse = () => {
         .then(data => {
             //kick user to "notfound" if this course id doesn't exist
             if(!data.id){
-                console.log("----THIS COURSE ID IS NOT FOUND ");
                 navigate("/notfound");
             //otherwise, kick user to "forbidden" if this course's userId doesn't match the user's id
             }else if(data.userId !== authUser.id){
-                console.log("----THESE DON'T MATCH: ");
                 navigate("/forbidden");
             }
-            console.log("---getCourse - see materials from data object:");
+            
             //adding a new property because it can't seem to read {course.courseOwner.firstName}, etc...
             //But this new property below works!
             data.owner = `${data.courseOwner.firstName} ${data.courseOwner.lastName}`;
-            //convert string of materials to array
-            data.materialsNeeded = createMaterialsArray(data.materialsNeeded);
-            console.log(data);
+            
             //set the course data
             setCourse(data);
             
@@ -53,27 +50,17 @@ const DeleteCourse = () => {
             navigate("/error");
         });
     }
-
+    //processes the form that has all of the data on the new course
     const handleSubmit = async(event) => {
         event.preventDefault();
 
         let fetchUrl = `http://localhost:5000/api/courses/${courseId}`;
 
-        let materialString = createMaterialsString(course.materialsNeeded);
-
-        const putData = JSON.stringify({
-            ...course,
-            materialsNeeded: materialString
-        });
-
         //reset error list
         setErrors([]);
 
+        //get credentials ready to pass in for API call
         const encodedCredentials = btoa(`${credentials.username}:${credentials.password}`);
-
-        console.log("----SENDING DATA");
-        console.log(credentials);
-        console.log(putData);
 
         await fetch(fetchUrl, {
             headers: {
@@ -83,21 +70,18 @@ const DeleteCourse = () => {
             method: "DELETE"
             })
             .then(res => {
-                console.log("----UPDATED DATA");
-                console.log(res);
-                if(res.status === 404){
-                    console.log("---NO COURSE FOUND");
-                    //navigate("/notfound");
-                }else if(res.status === 204){
+                //this means delete was successful - send user back to courses page
+                if(res.status === 204){
                     console.log("---COURSE FOUND BUT NO CONTENT RETURNED");
                     navigate(`/courses/`);
+                }else if(res.status === 404){
+                    console.log("---NO COURSE FOUND");
                 }
                 return res;
             })
             .then(res => res.json())
             .then(data => {
                 console.log("----UPDATED DATA");
-                console.log(data);
                 //populate the array that contains all of the error messages
                 let message = [];
                 //if it's a string, push it into an array!
@@ -108,13 +92,11 @@ const DeleteCourse = () => {
                     message = data.message;
                 }
                 setErrors(message);
-                console.log(data)
             })
             //This cataches the error, but the error is that no response has been returned...which is intended from the REST API
             //So...not sure what if anything needs to be changed here, because the creation of the database entry seems to work!
             .catch(error => {
                 console.log(`----NO RESPONSE DATA ${error}`);
-                //navigate(`/courses/`);
             });
             
     }

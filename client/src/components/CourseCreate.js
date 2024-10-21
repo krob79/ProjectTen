@@ -4,8 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import {useState, useContext} from 'react';
 import UserContext from "../context/UserContext";
 
-
 const CourseCreate = () => {
+    //default structure for the course object
     const courseObj = {
         title: "",
         description: "",
@@ -13,20 +13,22 @@ const CourseCreate = () => {
         materialsNeeded: [""],
         courseOwner: {}
     }
-
+    //state for course object
     const [course, setCourse] = useState(courseObj);
+    //state for list of errors that will appear if there's a problem creating the course
     const [errors, setErrors] = useState([]);
+    //Need information about current authUser to add to the newly created course, plus credentials to authorize the creation of a new course
     const { authUser, credentials } = useContext(UserContext);
+    //navigate is used to take the user back to the main courses page after the course has been created
     const navigate = useNavigate();
 
     //onUpdateHandler references the name attribute from an input field and updates a course property with the same name with a text value
     const onUpdateHandler = (e) => {
-        //console.log(`---onUpdateHandler: ${e.target.value}`);
         //name attribute in the input fields must match the course property
         let objKey = e.target.name;
         updateCourseInfo(objKey, e.target.value);
     }
-
+    //updates a single property in the course object
     const updateCourseInfo = (property, value) => {
         //console.log("---UPDATING COURSE INFO");
         //copy current version of course
@@ -40,14 +42,12 @@ const CourseCreate = () => {
             }
         };
         //update whatever property is referenced
-        courseCopy[property] = value;
-        //console.log("---NEW COURSE:");
-        //console.log(courseCopy);      
+        courseCopy[property] = value;     
         setCourse(courseCopy);
-
     }
 
-      const handleSubmit = async(event) => {
+    //processes the form that has all of the data on the new course
+    const handleSubmit = async(event) => {
         event.preventDefault();
 
         let fetchUrl = `http://localhost:5000/api/courses`;
@@ -73,7 +73,6 @@ const CourseCreate = () => {
             .then(res => res.json())
             .then(data => {
                 console.log("-----NEW COURSE CREATED!");
-                console.log(data);
                 //populate the array that contains all of the error messages
                 let message = [];
                 //if it's a string, push it into an array!
@@ -90,6 +89,7 @@ const CourseCreate = () => {
             //So...not sure what if anything needs to be changed here, because the creation of the database entry seems to work!
             .catch(error => {
                 console.log(`----NO RESPONSE DATA ${error}`);
+                //send user back to courses main page after course creation is complete
                 navigate(`/courses/`);
             });
             
@@ -99,8 +99,8 @@ const CourseCreate = () => {
         <main>
             <div className="wrap">
                 <h2>Create Course</h2>
+                {/* ErrorDisplay will only appear if the list of errors is at least 1 */}
                 {(errors.length > 0) ? <ErrorDisplay errorList={errors}/> : ""}
-                {/* Disable Submit on Enter key */}
                 <form onSubmit={handleSubmit}>
                     <div className="main--flex">
                         <div>

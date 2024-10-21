@@ -5,7 +5,6 @@ import BasicList from './BasicList';
 import UserContext from '../context/UserContext';
 import { createMaterialsArray, createMaterialsString } from "../utils/listHelper";
 import ErrorDisplay from './ErrorDisplay';
-import Markdown from 'react-markdown';
 
 const CourseUpdate = () => {
     let {courseId} = useParams();
@@ -16,7 +15,7 @@ const CourseUpdate = () => {
 
     useEffect( () => {
         //run fetch once component is mounted
-        getCourse(courseId);
+        getCourse();
     },[]);
     
     //these next two update handlers essentially do the same thing
@@ -46,7 +45,7 @@ const CourseUpdate = () => {
 
     }
 
-    const getCourse = async (courseId) =>{
+    const getCourse = async () =>{
         let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
         //console.log(`----UPDATE COURSE FETCHING COURSE ${courseUrl}...`);
         await fetch(courseUrl, {
