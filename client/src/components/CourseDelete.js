@@ -21,7 +21,7 @@ const DeleteCourse = () => {
     },[]);
 
     const getCourse = async () =>{
-        let courseUrl = `${configpath}/courses/${courseId}`;
+        let courseUrl = `https://projectten-production.up.railway.app/api/courses/${courseId}`;
         //let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
         //console.log(`----UPDATE COURSE FETCHING COURSE ${courseUrl}...`);
         await fetch(courseUrl, {
