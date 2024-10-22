@@ -58,7 +58,7 @@ const DeleteCourse = () => {
     const handleSubmit = async(event) => {
         event.preventDefault();
 
-        let fetchUrl = `http://localhost:5000/api/courses/${courseId}`;
+        let fetchUrl = `https://projectten-production.up.railway.app/api/courses/${courseId}`;
 
         //reset error list
         setErrors([]);

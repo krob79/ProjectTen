@@ -22,7 +22,7 @@ const Courses = () => {
 
     //makes the call to the api to retrieve data for all courses
     const getCourses = async () =>{
-        await fetch(`http://localhost:5000/api/courses/`, {
+        await fetch(`https://projectten-production.up.railway.app/api/courses/`, {
         headers: {
             'Content-Type': 'application/json'
         }

@@ -30,7 +30,7 @@ const CourseDetail = () => {
 
     //makes the call to the api to retrieve data of a single course, given the id
     const getCourse = async () =>{
-        let courseUrl = `${configpath}/courses/${courseId}`;
+        let courseUrl = `https://projectten-production.up.railway.app/api/courses/${courseId}`;
         //let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
         //console.log(`----FETCHING COURSE ${courseUrl}...`);
         await fetch(courseUrl, {

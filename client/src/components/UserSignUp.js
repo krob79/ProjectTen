@@ -33,7 +33,7 @@ const UserSignUp = () => {
     const handleSubmit = async(event) => {
         event.preventDefault();
 
-        let fetchUrl = `http://localhost:5000/api/users`;
+        let fetchUrl = `https://projectten-production.up.railway.app/api/users`;
 
         let formData = JSON.stringify({
             ...user
