@@ -1,3 +1,8 @@
+export const configpath = () => {
+    const path = "https://projectten-production.up.railway.app/api";
+    return path;
+}
+
 export const api = (
         path, 
         method = "GET", 
@@ -5,7 +10,8 @@ export const api = (
         credentials = null
     ) => {
         console.log("----using API Helper...");
-        const url = "http://localhost:5000/api" + path;
+        //const url = "http://localhost:5000/api" + path;
+        const url = "https://projectten-production.up.railway.app/api" + path;
 
         const options = {
             method,

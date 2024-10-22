@@ -4,6 +4,8 @@ import { useEffect, useState, useContext } from 'react';
 import UserContext from "../context/UserContext";
 import Markdown from 'react-markdown';
 
+import { configpath } from "../utils/apiHelper";
+
 const CourseDetail = () => {
     let {courseId} = useParams();
     //use to direct user to 404 display if id is invalid
@@ -28,7 +30,8 @@ const CourseDetail = () => {
 
     //makes the call to the api to retrieve data of a single course, given the id
     const getCourse = async () =>{
-        let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
+        let courseUrl = `${configpath}/courses/${courseId}`;
+        //let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
         console.log(`----FETCHING COURSE ${courseUrl}...`);
         await fetch(courseUrl, {
         headers: {

@@ -4,6 +4,8 @@ import { useEffect, useState, useContext } from 'react';
 import UserContext from '../context/UserContext';
 import ErrorDisplay from './ErrorDisplay';
 
+import { configpath } from "../utils/apiHelper";
+
 const DeleteCourse = () => {
     //need the course data to verify that the course owner is the same as the current user before deleting
     const [course, setCourse] = useState({});
@@ -20,7 +22,8 @@ const DeleteCourse = () => {
     },[]);
 
     const getCourse = async () =>{
-        let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
+        let courseUrl = `${configpath}/courses/${courseId}`;
+        //let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
         //console.log(`----UPDATE COURSE FETCHING COURSE ${courseUrl}...`);
         await fetch(courseUrl, {
         headers: {

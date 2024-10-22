@@ -5,6 +5,8 @@ import UserContext from '../context/UserContext';
 import ErrorDisplay from './ErrorDisplay';
 import Markdown from 'react-markdown';
 
+import { configpath } from "../utils/apiHelper";
+
 const CourseUpdate = () => {
     let {courseId} = useParams();
     const [course, setCourse] = useState({});
@@ -39,7 +41,8 @@ const CourseUpdate = () => {
     }
 
     const getCourse = async () =>{
-        let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
+        let courseUrl = `${configpath}/courses/${courseId}`;
+        // let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
         //console.log(`----UPDATE COURSE FETCHING COURSE ${courseUrl}...`);
         await fetch(courseUrl, {
         headers: {
