@@ -4,8 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import {useState, useContext} from 'react';
 import UserContext from "../context/UserContext";
 
-import { configpath } from "../utils/apiHelper";
-
 const CourseCreate = () => {
     //default structure for the course object
     const courseObj = {
@@ -53,7 +51,7 @@ const CourseCreate = () => {
         event.preventDefault();
 
         //let fetchUrl = `http://localhost:5000/api/courses`;
-        let fetchUrl = `${configpath}/courses`;
+        let fetchUrl = `https://projectten-production.up.railway.app/api/courses`;
 
         const postData = JSON.stringify({
             ...course

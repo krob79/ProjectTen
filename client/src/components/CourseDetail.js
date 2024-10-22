@@ -4,8 +4,6 @@ import { useEffect, useState, useContext } from 'react';
 import UserContext from "../context/UserContext";
 import Markdown from 'react-markdown';
 
-import { configpath } from "../utils/apiHelper";
-
 const CourseDetail = () => {
     let {courseId} = useParams();
     //use to direct user to 404 display if id is invalid

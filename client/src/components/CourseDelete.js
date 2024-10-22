@@ -4,8 +4,6 @@ import { useEffect, useState, useContext } from 'react';
 import UserContext from '../context/UserContext';
 import ErrorDisplay from './ErrorDisplay';
 
-import { configpath } from "../utils/apiHelper";
-
 const DeleteCourse = () => {
     //need the course data to verify that the course owner is the same as the current user before deleting
     const [course, setCourse] = useState({});
