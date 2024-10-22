@@ -13,6 +13,7 @@ export const api = (
         //const url = "http://localhost:5000/api" + path;
         const url = "https://projectten-production.up.railway.app/api" + path;
 
+
         const options = {
             method,
             headers: {}

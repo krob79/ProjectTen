@@ -18,6 +18,7 @@ const DeleteCourse = () => {
 
     useEffect( () => {
         //run fetch once component is mounted
+
         getCourse();
     },[]);
 
