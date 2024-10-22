@@ -32,7 +32,7 @@ const CourseDetail = () => {
     const getCourse = async () =>{
         let courseUrl = `${configpath}/courses/${courseId}`;
         //let courseUrl = `http://localhost:5000/api/courses/${courseId}`;
-        console.log(`----FETCHING COURSE ${courseUrl}...`);
+        //console.log(`----FETCHING COURSE ${courseUrl}...`);
         await fetch(courseUrl, {
         headers: {
             'Content-Type': 'application/json'
