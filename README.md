@@ -14,6 +14,7 @@ In addition, this project will require users to create an account and sign in to
 ![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=grey&style=flat-square)
 ![ExpressJS](https://img.shields.io/badge/-ExpressJS-white?logo=express&logoColor=black)
 ![SQLite](https://img.shields.io/badge/-SQLite-044a64?logo=sqlite&logoColor=white)
+![Railway](https://img.shields.io/badge/-Railway-b301b3?logo=railway&logoColor=white)
 
 
 ![NodeJS](https://img.shields.io/badge/-NodeJS-007E38?logo=nodedotjs&logoColor=white)
