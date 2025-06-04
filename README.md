@@ -23,3 +23,5 @@ Deployed to Railway.app
 ![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github&logoColor=white&style=flat-square)
 ![NPM](https://img.shields.io/badge/-NPM-CB3837?logo=npm&logoColor=white&style=flat-square)
 
+[![Treehouse](https://img.shields.io/badge/Treehouse-5FCF80?logo=treehouse&logoColor=fff)](#)
+
